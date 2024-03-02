@@ -7,4 +7,6 @@ RUN go build -o app github.com/stdyum/api-types-registry/cmd/types_registry
 FROM alpine:latest
 WORKDIR /app
 COPY --from=builder /app/app .
+
+HEALTHCHECK CMD wget --no-verbose --tries=1 --output-document=/dev/null http://0.0.0.0:$(echo "${PORT_HTTP}" | sed -e 's/^"//' -e 's/"$//' -e "s/^'//" -e "s/'$//")/ping || exit 1
 CMD ["./app"]
