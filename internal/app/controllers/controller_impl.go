@@ -10,6 +10,66 @@ import (
 	"github.com/stdyum/api-types-registry/internal/app/entities"
 )
 
+func (c *controller) GetTypesById(ctx context.Context, enrollment models.Enrollment, ids dto.GetTypesByIdRequestDTO) (response dto.TypesModelsResponseDTO, err error) {
+	if len(ids.GroupsIds) != 0 {
+		groups, err := c.repository.GetGroupsByIds(ctx, enrollment.StudyPlaceId, ids.GroupsIds)
+		if err != nil {
+			return dto.TypesModelsResponseDTO{}, err
+		}
+
+		response.GroupsIds = uslices.ToMapFunc(groups, func(item entities.Group) (string, dto.TypesModelsGroupResponseDTO) {
+			return item.ID.String(), dto.TypesModelsGroupResponseDTO{
+				ID:   item.ID.String(),
+				Name: item.Name,
+			}
+		})
+	}
+
+	if len(ids.RoomsIds) != 0 {
+		rooms, err := c.repository.GetRoomsByIds(ctx, enrollment.StudyPlaceId, ids.RoomsIds)
+		if err != nil {
+			return dto.TypesModelsResponseDTO{}, err
+		}
+
+		response.RoomsIds = uslices.ToMapFunc(rooms, func(item entities.Room) (string, dto.TypesModelsRoomResponseDTO) {
+			return item.ID.String(), dto.TypesModelsRoomResponseDTO{
+				ID:   item.ID.String(),
+				Name: item.Name,
+			}
+		})
+	}
+
+	if len(ids.SubjectsIds) != 0 {
+		subjects, err := c.repository.GetSubjectsByIds(ctx, enrollment.StudyPlaceId, ids.SubjectsIds)
+		if err != nil {
+			return dto.TypesModelsResponseDTO{}, err
+		}
+
+		response.SubjectsIds = uslices.ToMapFunc(subjects, func(item entities.Subject) (string, dto.TypesModelsSubjectResponseDTO) {
+			return item.ID.String(), dto.TypesModelsSubjectResponseDTO{
+				ID:   item.ID.String(),
+				Name: item.Name,
+			}
+		})
+	}
+
+	if len(ids.TeachersIds) != 0 {
+		teachers, err := c.repository.GetTeachersByIds(ctx, enrollment.StudyPlaceId, ids.TeachersIds)
+		if err != nil {
+			return dto.TypesModelsResponseDTO{}, err
+		}
+
+		response.TeachersIds = uslices.ToMapFunc(teachers, func(item entities.Teacher) (string, dto.TypesModelsTeacherResponseDTO) {
+			return item.ID.String(), dto.TypesModelsTeacherResponseDTO{
+				ID:   item.ID.String(),
+				Name: item.Name,
+			}
+		})
+	}
+
+	return
+}
+
 func (c *controller) GetStudentsInGroup(ctx context.Context, enrollment models.Enrollment, groupId uuid.UUID) ([]dto.StudentItemResponseDTO, error) {
 	students, err := c.repository.GetStudentsInGroup(ctx, enrollment.StudyPlaceId, groupId)
 	if err != nil {

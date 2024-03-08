@@ -2,7 +2,10 @@ package dto
 
 import (
 	"github.com/google/uuid"
+	"github.com/stdyum/api-common/models"
 )
+
+type GetTypesByIdRequestDTO models.TypesIds
 
 type CreateGroupEntryRequestDTO struct {
 	Name string `json:"name"`

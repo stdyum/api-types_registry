@@ -13,6 +13,8 @@ import (
 )
 
 type Controller interface {
+	GetTypesById(ctx context.Context, enrollment models.Enrollment, ids dto.GetTypesByIdRequestDTO) (dto.TypesModelsResponseDTO, error)
+
 	GetGroupsPaginated(ctx context.Context, enrollment models.Enrollment, paginationQuery pagination.Query) (dto.GroupsResponseDTO, error)
 	GetGroupsByIds(ctx context.Context, enrollment models.Enrollment, ids []uuid.UUID) ([]dto.GroupItemResponseDTO, error)
 	GetGroupById(ctx context.Context, enrollment models.Enrollment, id uuid.UUID) (dto.GroupItemResponseDTO, error)

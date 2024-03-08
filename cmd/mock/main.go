@@ -22,7 +22,7 @@ func main() {
 
 	enrollments := []models.Enrollment{
 		{
-			StudyPlaceId: uuid.MustParse("22dfd1be-eb72-4e1e-8659-cf4b8d95e90d"),
+			StudyPlaceId: uuid.MustParse("f6815261-3205-4c78-af3e-096430384af2"),
 			Permissions:  []models.Permission{models.PermissionAdmin},
 		},
 	}
@@ -30,7 +30,6 @@ func main() {
 	for _, enrollment := range enrollments {
 		mockEnrollment(ctx, ctrl, enrollment)
 	}
-
 }
 
 func mockEnrollment(ctx context.Context, ctrl controllers.Controller, enrollment models.Enrollment) {
