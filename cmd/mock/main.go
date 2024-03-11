@@ -22,7 +22,7 @@ func main() {
 
 	enrollments := []models.Enrollment{
 		{
-			StudyPlaceId: uuid.MustParse("f6815261-3205-4c78-af3e-096430384af2"),
+			StudyPlaceId: uuid.MustParse("fbd0abd6-7fda-485f-9e3a-79d41cd641ba"),
 			Permissions:  []models.Permission{models.PermissionAdmin},
 		},
 	}
