@@ -71,15 +71,16 @@ func (h *http) UpdateSubject(ctx *hc.Context) {
 	ctx.Status(netHttp.StatusNoContent)
 }
 
-func (h *http) DeleteSubjectById(ctx *hc.Context) {
+func (h *http) DeleteSubjectsByIds(ctx *hc.Context) {
 	enrollment := ctx.Enrollment()
-	id, err := ctx.UUIDParam("id")
-	if err != nil {
+
+	var request dto.DeleteSubjectsByIdsRequestDTO
+	if err := ctx.BindJSON(&request); err != nil {
 		_ = ctx.Error(err)
 		return
 	}
 
-	if err = h.controller.DeleteSubjectById(ctx, enrollment, id); err != nil {
+	if err := h.controller.DeleteSubjectsByIds(ctx, enrollment, request); err != nil {
 		_ = ctx.Error(err)
 		return
 	}

@@ -59,10 +59,10 @@ func (r *repository) UpdateTeacher(ctx context.Context, subject entities.Teacher
 	return databases.AssertRowAffectedErr(result, err)
 }
 
-func (r *repository) DeleteTeacherById(ctx context.Context, studyPlaceId uuid.UUID, id uuid.UUID) error {
+func (r *repository) DeleteTeachersByIds(ctx context.Context, studyPlaceId uuid.UUID, ids []uuid.UUID) error {
 	result, err := r.database.ExecContext(ctx,
-		"DELETE FROM teachers WHERE id = $2 and study_place_id = $3",
-		id, studyPlaceId,
+		"DELETE FROM teachers WHERE id = ANY($1) and study_place_id = $2",
+		pq.Array(ids), studyPlaceId,
 	)
 	return databases.AssertRowAffectedErr(result, err)
 }

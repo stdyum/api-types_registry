@@ -71,15 +71,16 @@ func (h *http) UpdateRoom(ctx *hc.Context) {
 	ctx.Status(netHttp.StatusNoContent)
 }
 
-func (h *http) DeleteRoomById(ctx *hc.Context) {
+func (h *http) DeleteRoomsByIds(ctx *hc.Context) {
 	enrollment := ctx.Enrollment()
-	id, err := ctx.UUIDParam("id")
-	if err != nil {
+
+	var request dto.DeleteRoomsByIdsRequestDTO
+	if err := ctx.BindJSON(&request); err != nil {
 		_ = ctx.Error(err)
 		return
 	}
 
-	if err = h.controller.DeleteRoomById(ctx, enrollment, id); err != nil {
+	if err := h.controller.DeleteRoomsByIds(ctx, enrollment, request); err != nil {
 		_ = ctx.Error(err)
 		return
 	}

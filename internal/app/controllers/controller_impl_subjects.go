@@ -60,7 +60,7 @@ func (c *controller) GetSubjectById(ctx context.Context, enrollment models.Enrol
 	}, nil
 }
 
-func (c *controller) CreateSubjects(ctx context.Context, enrollment models.Enrollment, request dto.CreateSubjectsRequestDTO) ([]entities.Subject, error) {
+func (c *controller) CreateSubjects(ctx context.Context, enrollment models.Enrollment, request dto.CreateSubjectsRequestDTO) ([]dto.SubjectItemResponseDTO, error) {
 	if err := enrollment.Permissions.Assert(models.PermissionRegistry); err != nil {
 		return nil, err
 	}
@@ -77,7 +77,13 @@ func (c *controller) CreateSubjects(ctx context.Context, enrollment models.Enrol
 		return nil, err
 	}
 
-	return subjects, nil
+	return uslices.MapFunc(subjects, func(item entities.Subject) dto.SubjectItemResponseDTO {
+		return dto.SubjectItemResponseDTO{
+			ID:           item.ID,
+			StudyPlaceId: item.StudyPlaceId,
+			Name:         item.Name,
+		}
+	}), nil
 }
 
 func (c *controller) UpdateSubject(ctx context.Context, enrollment models.Enrollment, request dto.UpdateSubjectRequestDTO) error {
@@ -94,10 +100,10 @@ func (c *controller) UpdateSubject(ctx context.Context, enrollment models.Enroll
 	return c.repository.UpdateSubject(ctx, subject)
 }
 
-func (c *controller) DeleteSubjectById(ctx context.Context, enrollment models.Enrollment, id uuid.UUID) error {
+func (c *controller) DeleteSubjectsByIds(ctx context.Context, enrollment models.Enrollment, request dto.DeleteSubjectsByIdsRequestDTO) error {
 	if err := enrollment.Permissions.Assert(models.PermissionRegistry); err != nil {
 		return err
 	}
 
-	return c.repository.DeleteSubjectById(ctx, enrollment.StudyPlaceId, id)
+	return c.repository.DeleteSubjectsByIds(ctx, enrollment.StudyPlaceId, request.IDs)
 }

@@ -60,10 +60,10 @@ func (r *repository) UpdateRoom(ctx context.Context, room entities.Room) error {
 	return databases.AssertRowAffectedErr(result, err)
 }
 
-func (r *repository) DeleteRoomById(ctx context.Context, studyPlaceId uuid.UUID, id uuid.UUID) error {
+func (r *repository) DeleteRoomsByIds(ctx context.Context, studyPlaceId uuid.UUID, ids []uuid.UUID) error {
 	result, err := r.database.ExecContext(ctx,
-		"DELETE FROM rooms WHERE id = $2 and study_place_id = $3",
-		id, studyPlaceId,
+		"DELETE FROM rooms WHERE id = ANY($1) and study_place_id = $2",
+		pq.Array(ids), studyPlaceId,
 	)
 	return databases.AssertRowAffectedErr(result, err)
 }

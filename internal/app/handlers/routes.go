@@ -20,7 +20,7 @@ func (h *http) ConfigureRoutes() *hc.Engine {
 		groupsGroup.GET("id", h.GetGroupById)
 		groupsGroup.POST("", h.CreateGroups)
 		groupsGroup.PUT("", h.UpdateGroup)
-		groupsGroup.DELETE(":id", h.DeleteGroupById)
+		groupsGroup.DELETE("", h.DeleteGroupsByIds)
 	}
 
 	{
@@ -30,7 +30,7 @@ func (h *http) ConfigureRoutes() *hc.Engine {
 		roomsGroup.GET("id", h.GetRoomById)
 		roomsGroup.POST("", h.CreateRooms)
 		roomsGroup.PUT("", h.UpdateRoom)
-		roomsGroup.DELETE(":id", h.DeleteRoomById)
+		roomsGroup.DELETE("", h.DeleteRoomsByIds)
 	}
 
 	{
@@ -40,7 +40,7 @@ func (h *http) ConfigureRoutes() *hc.Engine {
 		studentsGroup.GET("id", h.GetStudentById)
 		studentsGroup.POST("", h.CreateStudents)
 		studentsGroup.PUT("", h.UpdateStudent)
-		studentsGroup.DELETE(":id", h.DeleteStudentById)
+		studentsGroup.DELETE("", h.DeleteStudentsByIds)
 	}
 
 	{
@@ -50,7 +50,7 @@ func (h *http) ConfigureRoutes() *hc.Engine {
 		subjectsGroup.GET("id", h.GetSubjectById)
 		subjectsGroup.POST("", h.CreateSubjects)
 		subjectsGroup.PUT("", h.UpdateSubject)
-		subjectsGroup.DELETE(":id", h.DeleteSubjectById)
+		subjectsGroup.DELETE("", h.DeleteSubjectsByIds)
 	}
 
 	{
@@ -60,7 +60,7 @@ func (h *http) ConfigureRoutes() *hc.Engine {
 		teachersGroup.GET("id", h.GetTeacherById)
 		teachersGroup.POST("", h.CreateTeachers)
 		teachersGroup.PUT("", h.UpdateTeacher)
-		teachersGroup.DELETE(":id", h.DeleteTeacherById)
+		teachersGroup.DELETE("", h.DeleteTeachersByIds)
 	}
 
 	return engine

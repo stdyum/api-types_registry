@@ -20,6 +20,10 @@ type UpdateGroupRequestDTO struct {
 	Name string    `json:"name"`
 }
 
+type DeleteGroupsByIdsRequestDTO struct {
+	IDs []uuid.UUID `json:"ids"`
+}
+
 type CreateRoomEntryRequestDTO struct {
 	Name string `json:"name"`
 }
@@ -31,6 +35,10 @@ type CreateRoomsRequestDTO struct {
 type UpdateRoomRequestDTO struct {
 	ID   uuid.UUID `json:"id"`
 	Name string    `json:"name"`
+}
+
+type DeleteRoomsByIdsRequestDTO struct {
+	IDs []uuid.UUID `json:"ids"`
 }
 
 type CreateStudentEntryRequestDTO struct {
@@ -46,6 +54,10 @@ type UpdateStudentRequestDTO struct {
 	Name string    `json:"name"`
 }
 
+type DeleteStudentsByIdsRequestDTO struct {
+	IDs []uuid.UUID `json:"ids"`
+}
+
 type CreateSubjectEntryRequestDTO struct {
 	Name string `json:"name"`
 }
@@ -59,6 +71,10 @@ type UpdateSubjectRequestDTO struct {
 	Name string    `json:"name"`
 }
 
+type DeleteSubjectsByIdsRequestDTO struct {
+	IDs []uuid.UUID `json:"ids"`
+}
+
 type CreateTeacherEntryRequestDTO struct {
 	Name string `json:"name"`
 }
@@ -70,6 +86,10 @@ type CreateTeachersRequestDTO struct {
 type UpdateTeacherRequestDTO struct {
 	ID   uuid.UUID `json:"id"`
 	Name string    `json:"name"`
+}
+
+type DeleteTeachersByIdsRequestDTO struct {
+	IDs []uuid.UUID `json:"ids"`
 }
 
 type AddStudentsToGroupRequestDTO struct {

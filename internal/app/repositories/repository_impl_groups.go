@@ -59,10 +59,10 @@ func (r *repository) UpdateGroup(ctx context.Context, group entities.Group) erro
 	return databases.AssertRowAffectedErr(result, err)
 }
 
-func (r *repository) DeleteGroupById(ctx context.Context, studyPlaceId uuid.UUID, id uuid.UUID) error {
+func (r *repository) DeleteGroupsByIds(ctx context.Context, studyPlaceId uuid.UUID, ids []uuid.UUID) error {
 	result, err := r.database.ExecContext(ctx,
-		"DELETE FROM groups WHERE id = $2 and study_place_id = $3",
-		id, studyPlaceId,
+		"DELETE FROM groups WHERE id = ANY($1) and study_place_id = $2",
+		pq.Array(ids), studyPlaceId,
 	)
 	return databases.AssertRowAffectedErr(result, err)
 }

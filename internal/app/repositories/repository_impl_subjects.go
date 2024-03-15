@@ -20,7 +20,6 @@ func (r *repository) GetSubjectsPaginated(ctx context.Context, studyPlaceId uuid
 		studyPlaceId,
 	)
 	return databases.ScanPaginationErr(result, r.scanSubject, total, err)
-
 }
 
 func (r *repository) GetSubjectsByIds(ctx context.Context, studyPlaceId uuid.UUID, ids []uuid.UUID) ([]entities.Subject, error) {
@@ -60,10 +59,10 @@ func (r *repository) UpdateSubject(ctx context.Context, subject entities.Subject
 	return databases.AssertRowAffectedErr(result, err)
 }
 
-func (r *repository) DeleteSubjectById(ctx context.Context, studyPlaceId uuid.UUID, id uuid.UUID) error {
+func (r *repository) DeleteSubjectsByIds(ctx context.Context, studyPlaceId uuid.UUID, ids []uuid.UUID) error {
 	result, err := r.database.ExecContext(ctx,
-		"DELETE FROM subjects WHERE id = $2 and study_place_id = $3",
-		id, studyPlaceId,
+		"DELETE FROM subjects WHERE id = ANY($1) and study_place_id = $2",
+		pq.Array(ids), studyPlaceId,
 	)
 	return databases.AssertRowAffectedErr(result, err)
 }

@@ -71,15 +71,16 @@ func (h *http) UpdateGroup(ctx *hc.Context) {
 	ctx.Status(netHttp.StatusNoContent)
 }
 
-func (h *http) DeleteGroupById(ctx *hc.Context) {
+func (h *http) DeleteGroupsByIds(ctx *hc.Context) {
 	enrollment := ctx.Enrollment()
-	id, err := ctx.UUIDParam("id")
-	if err != nil {
+
+	var request dto.DeleteGroupsByIdsRequestDTO
+	if err := ctx.BindJSON(&request); err != nil {
 		_ = ctx.Error(err)
 		return
 	}
 
-	if err = h.controller.DeleteGroupById(ctx, enrollment, id); err != nil {
+	if err := h.controller.DeleteGroupsByIds(ctx, enrollment, request); err != nil {
 		_ = ctx.Error(err)
 		return
 	}

@@ -60,7 +60,7 @@ func (c *controller) GetStudentById(ctx context.Context, enrollment models.Enrol
 	}, nil
 }
 
-func (c *controller) CreateStudents(ctx context.Context, enrollment models.Enrollment, request dto.CreateStudentsRequestDTO) ([]entities.Student, error) {
+func (c *controller) CreateStudents(ctx context.Context, enrollment models.Enrollment, request dto.CreateStudentsRequestDTO) ([]dto.StudentItemResponseDTO, error) {
 	if err := enrollment.Permissions.Assert(models.PermissionRegistry); err != nil {
 		return nil, err
 	}
@@ -77,7 +77,13 @@ func (c *controller) CreateStudents(ctx context.Context, enrollment models.Enrol
 		return nil, err
 	}
 
-	return students, nil
+	return uslices.MapFunc(students, func(item entities.Student) dto.StudentItemResponseDTO {
+		return dto.StudentItemResponseDTO{
+			ID:           item.ID,
+			StudyPlaceId: item.StudyPlaceId,
+			Name:         item.Name,
+		}
+	}), nil
 }
 
 func (c *controller) UpdateStudent(ctx context.Context, enrollment models.Enrollment, request dto.UpdateStudentRequestDTO) error {
@@ -94,10 +100,10 @@ func (c *controller) UpdateStudent(ctx context.Context, enrollment models.Enroll
 	return c.repository.UpdateStudent(ctx, student)
 }
 
-func (c *controller) DeleteStudentById(ctx context.Context, enrollment models.Enrollment, id uuid.UUID) error {
+func (c *controller) DeleteStudentsByIds(ctx context.Context, enrollment models.Enrollment, request dto.DeleteStudentsByIdsRequestDTO) error {
 	if err := enrollment.Permissions.Assert(models.PermissionRegistry); err != nil {
 		return err
 	}
 
-	return c.repository.DeleteStudentById(ctx, enrollment.StudyPlaceId, id)
+	return c.repository.DeleteStudentsByIds(ctx, enrollment.StudyPlaceId, request.IDs)
 }

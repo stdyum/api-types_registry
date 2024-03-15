@@ -60,7 +60,7 @@ func (c *controller) GetGroupById(ctx context.Context, enrollment models.Enrollm
 	}, nil
 }
 
-func (c *controller) CreateGroups(ctx context.Context, enrollment models.Enrollment, request dto.CreateGroupsRequestDTO) ([]entities.Group, error) {
+func (c *controller) CreateGroups(ctx context.Context, enrollment models.Enrollment, request dto.CreateGroupsRequestDTO) ([]dto.GroupItemResponseDTO, error) {
 	if err := enrollment.Permissions.Assert(models.PermissionRegistry); err != nil {
 		return nil, err
 	}
@@ -77,7 +77,13 @@ func (c *controller) CreateGroups(ctx context.Context, enrollment models.Enrollm
 		return nil, err
 	}
 
-	return groups, nil
+	return uslices.MapFunc(groups, func(item entities.Group) dto.GroupItemResponseDTO {
+		return dto.GroupItemResponseDTO{
+			ID:           item.ID,
+			StudyPlaceId: item.StudyPlaceId,
+			Name:         item.Name,
+		}
+	}), nil
 }
 
 func (c *controller) UpdateGroup(ctx context.Context, enrollment models.Enrollment, request dto.UpdateGroupRequestDTO) error {
@@ -94,10 +100,10 @@ func (c *controller) UpdateGroup(ctx context.Context, enrollment models.Enrollme
 	return c.repository.UpdateGroup(ctx, group)
 }
 
-func (c *controller) DeleteGroupById(ctx context.Context, enrollment models.Enrollment, id uuid.UUID) error {
+func (c *controller) DeleteGroupsByIds(ctx context.Context, enrollment models.Enrollment, request dto.DeleteGroupsByIdsRequestDTO) error {
 	if err := enrollment.Permissions.Assert(models.PermissionRegistry); err != nil {
 		return err
 	}
 
-	return c.repository.DeleteGroupById(ctx, enrollment.StudyPlaceId, id)
+	return c.repository.DeleteGroupsByIds(ctx, enrollment.StudyPlaceId, request.IDs)
 }

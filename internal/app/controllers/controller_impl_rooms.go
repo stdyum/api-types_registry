@@ -60,7 +60,7 @@ func (c *controller) GetRoomById(ctx context.Context, enrollment models.Enrollme
 	}, nil
 }
 
-func (c *controller) CreateRooms(ctx context.Context, enrollment models.Enrollment, request dto.CreateRoomsRequestDTO) ([]entities.Room, error) {
+func (c *controller) CreateRooms(ctx context.Context, enrollment models.Enrollment, request dto.CreateRoomsRequestDTO) ([]dto.RoomItemResponseDTO, error) {
 	if err := enrollment.Permissions.Assert(models.PermissionRegistry); err != nil {
 		return nil, err
 	}
@@ -77,7 +77,13 @@ func (c *controller) CreateRooms(ctx context.Context, enrollment models.Enrollme
 		return nil, err
 	}
 
-	return rooms, nil
+	return uslices.MapFunc(rooms, func(item entities.Room) dto.RoomItemResponseDTO {
+		return dto.RoomItemResponseDTO{
+			ID:           item.ID,
+			StudyPlaceId: item.StudyPlaceId,
+			Name:         item.Name,
+		}
+	}), nil
 }
 
 func (c *controller) UpdateRoom(ctx context.Context, enrollment models.Enrollment, request dto.UpdateRoomRequestDTO) error {
@@ -94,10 +100,10 @@ func (c *controller) UpdateRoom(ctx context.Context, enrollment models.Enrollmen
 	return c.repository.UpdateRoom(ctx, room)
 }
 
-func (c *controller) DeleteRoomById(ctx context.Context, enrollment models.Enrollment, id uuid.UUID) error {
+func (c *controller) DeleteRoomsByIds(ctx context.Context, enrollment models.Enrollment, request dto.DeleteRoomsByIdsRequestDTO) error {
 	if err := enrollment.Permissions.Assert(models.PermissionRegistry); err != nil {
 		return err
 	}
 
-	return c.repository.DeleteRoomById(ctx, enrollment.StudyPlaceId, id)
+	return c.repository.DeleteRoomsByIds(ctx, enrollment.StudyPlaceId, request.IDs)
 }

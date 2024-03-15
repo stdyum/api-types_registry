@@ -15,35 +15,35 @@ type Repository interface {
 	GetGroupById(ctx context.Context, studyPlaceId uuid.UUID, id uuid.UUID) (entities.Group, error)
 	CreateGroups(ctx context.Context, groups []entities.Group) error
 	UpdateGroup(ctx context.Context, group entities.Group) error
-	DeleteGroupById(ctx context.Context, studyPlaceId uuid.UUID, id uuid.UUID) error
+	DeleteGroupsByIds(ctx context.Context, studyPlaceId uuid.UUID, ids []uuid.UUID) error
 
 	GetRoomsPaginated(ctx context.Context, studyPlaceId uuid.UUID, paginationQuery pagination.Query) ([]entities.Room, int, error)
 	GetRoomsByIds(ctx context.Context, studyPlaceId uuid.UUID, ids []uuid.UUID) ([]entities.Room, error)
 	GetRoomById(ctx context.Context, studyPlaceId uuid.UUID, id uuid.UUID) (entities.Room, error)
 	CreateRooms(ctx context.Context, rooms []entities.Room) error
 	UpdateRoom(ctx context.Context, room entities.Room) error
-	DeleteRoomById(ctx context.Context, studyPlaceId uuid.UUID, id uuid.UUID) error
+	DeleteRoomsByIds(ctx context.Context, studyPlaceId uuid.UUID, ids []uuid.UUID) error
 
 	GetSubjectsPaginated(ctx context.Context, studyPlaceId uuid.UUID, paginationQuery pagination.Query) ([]entities.Subject, int, error)
 	GetSubjectsByIds(ctx context.Context, studyPlaceId uuid.UUID, ids []uuid.UUID) ([]entities.Subject, error)
 	GetSubjectById(ctx context.Context, studyPlaceId uuid.UUID, id uuid.UUID) (entities.Subject, error)
 	CreateSubjects(ctx context.Context, subjects []entities.Subject) error
 	UpdateSubject(ctx context.Context, subject entities.Subject) error
-	DeleteSubjectById(ctx context.Context, studyPlaceId uuid.UUID, id uuid.UUID) error
+	DeleteSubjectsByIds(ctx context.Context, studyPlaceId uuid.UUID, ids []uuid.UUID) error
 
 	GetTeachersPaginated(ctx context.Context, studyPlaceId uuid.UUID, paginationQuery pagination.Query) ([]entities.Teacher, int, error)
 	GetTeachersByIds(ctx context.Context, studyPlaceId uuid.UUID, ids []uuid.UUID) ([]entities.Teacher, error)
 	GetTeacherById(ctx context.Context, studyPlaceId uuid.UUID, id uuid.UUID) (entities.Teacher, error)
 	CreateTeachers(ctx context.Context, teachers []entities.Teacher) error
 	UpdateTeacher(ctx context.Context, teacher entities.Teacher) error
-	DeleteTeacherById(ctx context.Context, studyPlaceId uuid.UUID, id uuid.UUID) error
+	DeleteTeachersByIds(ctx context.Context, studyPlaceId uuid.UUID, ids []uuid.UUID) error
 
 	GetStudentsPaginated(ctx context.Context, studyPlaceId uuid.UUID, paginationQuery pagination.Query) ([]entities.Student, int, error)
 	GetStudentsByIds(ctx context.Context, studyPlaceId uuid.UUID, ids []uuid.UUID) ([]entities.Student, error)
 	GetStudentById(ctx context.Context, studyPlaceId uuid.UUID, id uuid.UUID) (entities.Student, error)
 	CreateStudents(ctx context.Context, students []entities.Student) error
 	UpdateStudent(ctx context.Context, student entities.Student) error
-	DeleteStudentById(ctx context.Context, studyPlaceId uuid.UUID, id uuid.UUID) error
+	DeleteStudentsByIds(ctx context.Context, studyPlaceId uuid.UUID, ids []uuid.UUID) error
 
 	GetStudentsInGroup(ctx context.Context, studyPlaceId uuid.UUID, groupId uuid.UUID) ([]entities.Student, error)
 	AddStudentsToGroup(ctx context.Context, studyPlaceId uuid.UUID, studentIds []uuid.UUID, groupId uuid.UUID) error
