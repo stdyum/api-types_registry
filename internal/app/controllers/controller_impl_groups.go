@@ -11,8 +11,8 @@ import (
 	"github.com/stdyum/api-types-registry/internal/app/entities"
 )
 
-func (c *controller) GetGroupsPaginated(ctx context.Context, enrollment models.Enrollment, paginationQuery pagination.Query) (dto.GroupsResponseDTO, error) {
-	groups, amount, err := c.repository.GetGroupsPaginated(ctx, enrollment.StudyPlaceId, paginationQuery)
+func (c *controller) GetGroupsPaginated(ctx context.Context, studyPlaceId uuid.UUID, paginationQuery pagination.Query) (dto.GroupsResponseDTO, error) {
+	groups, amount, err := c.repository.GetGroupsPaginated(ctx, studyPlaceId, paginationQuery)
 	if err != nil {
 		return dto.GroupsResponseDTO{}, err
 	}
@@ -86,13 +86,13 @@ func (c *controller) CreateGroups(ctx context.Context, enrollment models.Enrollm
 	}), nil
 }
 
-func (c *controller) UpdateGroup(ctx context.Context, enrollment models.Enrollment, request dto.UpdateGroupRequestDTO) error {
+func (c *controller) UpdateGroup(ctx context.Context, enrollment models.Enrollment, id uuid.UUID, request dto.UpdateGroupRequestDTO) error {
 	if err := enrollment.Permissions.Assert(models.PermissionRegistry); err != nil {
 		return err
 	}
 
 	group := entities.Group{
-		ID:           request.ID,
+		ID:           id,
 		StudyPlaceId: enrollment.StudyPlaceId,
 		Name:         request.Name,
 	}

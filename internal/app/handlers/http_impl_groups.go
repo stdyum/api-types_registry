@@ -8,10 +8,10 @@ import (
 )
 
 func (h *http) GetGroupsPaginated(ctx *hc.Context) {
-	enrollment := ctx.Enrollment()
+	studyPlaceId := ctx.StudyPlaceId()
 	query := ctx.PaginationQuery()
 
-	response, err := h.controller.GetGroupsPaginated(ctx, enrollment, &query)
+	response, err := h.controller.GetGroupsPaginated(ctx, studyPlaceId, &query)
 	if err != nil {
 		_ = ctx.Error(err)
 		return
@@ -56,14 +56,19 @@ func (h *http) CreateGroups(ctx *hc.Context) {
 
 func (h *http) UpdateGroup(ctx *hc.Context) {
 	enrollment := ctx.Enrollment()
-
-	var request dto.UpdateGroupRequestDTO
-	if err := ctx.BindJSON(&request); err != nil {
+	id, err := ctx.UUIDParam("id")
+	if err != nil {
 		_ = ctx.Error(err)
 		return
 	}
 
-	if err := h.controller.UpdateGroup(ctx, enrollment, request); err != nil {
+	var request dto.UpdateGroupRequestDTO
+	if err = ctx.BindJSON(&request); err != nil {
+		_ = ctx.Error(err)
+		return
+	}
+
+	if err = h.controller.UpdateGroup(ctx, enrollment, id, request); err != nil {
 		_ = ctx.Error(err)
 		return
 	}

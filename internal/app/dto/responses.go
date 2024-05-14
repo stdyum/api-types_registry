@@ -8,6 +8,7 @@ import (
 type TypesModelsResponseDTO struct {
 	GroupsIds   map[string]TypesModelsGroupResponseDTO   `json:"groupsIds"`
 	RoomsIds    map[string]TypesModelsRoomResponseDTO    `json:"roomsIds"`
+	StudentsIds map[string]TypesModelsStudentResponseDTO `json:"studentsIds"`
 	SubjectsIds map[string]TypesModelsSubjectResponseDTO `json:"subjectsIds"`
 	TeachersIds map[string]TypesModelsTeacherResponseDTO `json:"teachersIds"`
 }
@@ -18,6 +19,11 @@ type TypesModelsGroupResponseDTO struct {
 }
 
 type TypesModelsRoomResponseDTO struct {
+	ID   string `json:"id"`
+	Name string `json:"name"`
+}
+
+type TypesModelsStudentResponseDTO struct {
 	ID   string `json:"id"`
 	Name string `json:"name"`
 }

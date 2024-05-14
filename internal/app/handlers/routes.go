@@ -13,54 +13,56 @@ func (h *http) ConfigureRoutes() *hc.Engine {
 
 	v1 := engine.Group("api/v1", hc.Logger(), middlewares.ErrorMiddleware())
 
-	{
-		groupsGroup := v1.Group("groups").Use(middlewares.EnrollmentAuthMiddleware())
+	withStudyPlaceId := v1.Group("", middlewares.StudyPlaceMiddleware())
 
-		groupsGroup.Use(middlewares.PaginationMiddleware(10)).GET("", h.GetGroupsPaginated)
-		groupsGroup.GET("id", h.GetGroupById)
-		groupsGroup.POST("", h.CreateGroups)
-		groupsGroup.PUT("", h.UpdateGroup)
-		groupsGroup.DELETE("", h.DeleteGroupsByIds)
+	{
+		groupsGroup := withStudyPlaceId.Group("groups")
+
+		groupsGroup.Use(middlewares.AuthMiddleware(), middlewares.PaginationMiddleware(10)).GET("", h.GetGroupsPaginated)
+		groupsGroup.Use(middlewares.AuthMiddleware()).GET("id", h.GetGroupById)
+		groupsGroup.Use(middlewares.EnrollmentAuthMiddleware()).POST("", h.CreateGroups)
+		groupsGroup.Use(middlewares.EnrollmentAuthMiddleware()).PUT(":id", h.UpdateGroup)
+		groupsGroup.Use(middlewares.EnrollmentAuthMiddleware()).DELETE("", h.DeleteGroupsByIds)
 	}
 
 	{
-		roomsGroup := v1.Group("rooms").Use(middlewares.EnrollmentAuthMiddleware())
+		roomsGroup := withStudyPlaceId.Group("rooms")
 
-		roomsGroup.Use(middlewares.PaginationMiddleware(10)).GET("", h.GetRoomsPaginated)
-		roomsGroup.GET("id", h.GetRoomById)
-		roomsGroup.POST("", h.CreateRooms)
-		roomsGroup.PUT("", h.UpdateRoom)
-		roomsGroup.DELETE("", h.DeleteRoomsByIds)
+		roomsGroup.Use(middlewares.AuthMiddleware(), middlewares.PaginationMiddleware(10)).GET("", h.GetRoomsPaginated)
+		roomsGroup.Use(middlewares.AuthMiddleware()).GET("id", h.GetRoomById)
+		roomsGroup.Use(middlewares.EnrollmentAuthMiddleware()).POST("", h.CreateRooms)
+		roomsGroup.Use(middlewares.EnrollmentAuthMiddleware()).PUT(":id", h.UpdateRoom)
+		roomsGroup.Use(middlewares.EnrollmentAuthMiddleware()).DELETE("", h.DeleteRoomsByIds)
 	}
 
 	{
-		studentsGroup := v1.Group("students").Use(middlewares.EnrollmentAuthMiddleware())
+		studentsGroup := withStudyPlaceId.Group("students")
 
-		studentsGroup.Use(middlewares.PaginationMiddleware(10)).GET("", h.GetStudentsPaginated)
-		studentsGroup.GET("id", h.GetStudentById)
-		studentsGroup.POST("", h.CreateStudents)
-		studentsGroup.PUT("", h.UpdateStudent)
-		studentsGroup.DELETE("", h.DeleteStudentsByIds)
+		studentsGroup.Use(middlewares.AuthMiddleware(), middlewares.PaginationMiddleware(10)).GET("", h.GetStudentsPaginated)
+		studentsGroup.Use(middlewares.AuthMiddleware()).GET("id", h.GetStudentById)
+		studentsGroup.Use(middlewares.EnrollmentAuthMiddleware()).POST("", h.CreateStudents)
+		studentsGroup.Use(middlewares.EnrollmentAuthMiddleware()).PUT(":id", h.UpdateStudent)
+		studentsGroup.Use(middlewares.EnrollmentAuthMiddleware()).DELETE("", h.DeleteStudentsByIds)
 	}
 
 	{
-		subjectsGroup := v1.Group("subjects").Use(middlewares.EnrollmentAuthMiddleware())
+		subjectsGroup := withStudyPlaceId.Group("subjects")
 
-		subjectsGroup.Use(middlewares.PaginationMiddleware(10)).GET("", h.GetSubjectsPaginated)
-		subjectsGroup.GET("id", h.GetSubjectById)
-		subjectsGroup.POST("", h.CreateSubjects)
-		subjectsGroup.PUT("", h.UpdateSubject)
-		subjectsGroup.DELETE("", h.DeleteSubjectsByIds)
+		subjectsGroup.Use(middlewares.AuthMiddleware(), middlewares.PaginationMiddleware(10)).GET("", h.GetSubjectsPaginated)
+		subjectsGroup.Use(middlewares.AuthMiddleware()).GET("id", h.GetSubjectById)
+		subjectsGroup.Use(middlewares.EnrollmentAuthMiddleware()).POST("", h.CreateSubjects)
+		subjectsGroup.Use(middlewares.EnrollmentAuthMiddleware()).PUT(":id", h.UpdateSubject)
+		subjectsGroup.Use(middlewares.EnrollmentAuthMiddleware()).DELETE("", h.DeleteSubjectsByIds)
 	}
 
 	{
-		teachersGroup := v1.Group("teachers").Use(middlewares.EnrollmentAuthMiddleware())
+		teachersGroup := withStudyPlaceId.Group("teachers")
 
-		teachersGroup.Use(middlewares.PaginationMiddleware(10)).GET("", h.GetTeachersPaginated)
-		teachersGroup.GET("id", h.GetTeacherById)
-		teachersGroup.POST("", h.CreateTeachers)
-		teachersGroup.PUT("", h.UpdateTeacher)
-		teachersGroup.DELETE("", h.DeleteTeachersByIds)
+		teachersGroup.Use(middlewares.AuthMiddleware(), middlewares.PaginationMiddleware(10)).GET("", h.GetTeachersPaginated)
+		teachersGroup.Use(middlewares.AuthMiddleware()).GET("id", h.GetTeacherById)
+		teachersGroup.Use(middlewares.EnrollmentAuthMiddleware()).POST("", h.CreateTeachers)
+		teachersGroup.Use(middlewares.EnrollmentAuthMiddleware()).PUT(":id", h.UpdateTeacher)
+		teachersGroup.Use(middlewares.EnrollmentAuthMiddleware()).DELETE("", h.DeleteTeachersByIds)
 	}
 
 	return engine

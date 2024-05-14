@@ -8,10 +8,10 @@ import (
 )
 
 func (h *http) GetRoomsPaginated(ctx *hc.Context) {
-	enrollment := ctx.Enrollment()
+	studyPlaceId := ctx.StudyPlaceId()
 	query := ctx.PaginationQuery()
 
-	response, err := h.controller.GetRoomsPaginated(ctx, enrollment, &query)
+	response, err := h.controller.GetRoomsPaginated(ctx, studyPlaceId, &query)
 	if err != nil {
 		_ = ctx.Error(err)
 		return
@@ -56,14 +56,19 @@ func (h *http) CreateRooms(ctx *hc.Context) {
 
 func (h *http) UpdateRoom(ctx *hc.Context) {
 	enrollment := ctx.Enrollment()
-
-	var request dto.UpdateRoomRequestDTO
-	if err := ctx.BindJSON(&request); err != nil {
+	id, err := ctx.UUIDParam("id")
+	if err != nil {
 		_ = ctx.Error(err)
 		return
 	}
 
-	if err := h.controller.UpdateRoom(ctx, enrollment, request); err != nil {
+	var request dto.UpdateRoomRequestDTO
+	if err = ctx.BindJSON(&request); err != nil {
+		_ = ctx.Error(err)
+		return
+	}
+
+	if err = h.controller.UpdateRoom(ctx, enrollment, id, request); err != nil {
 		_ = ctx.Error(err)
 		return
 	}

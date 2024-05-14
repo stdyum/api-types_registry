@@ -20,6 +20,12 @@ func Configure() (server.Routes, controllers.Controller, error) {
 	}
 	clients.StudyPlacesGRpcClient = studyPlacesServer
 
+	authServer, err := config.ConnectToAuthServer(config.Config.AuthGRpc)
+	if err != nil {
+		return server.Routes{}, nil, err
+	}
+	clients.AuthGRpcClient = authServer
+
 	routes, ctrl, err := app.New(db, studyPlacesServer)
 	if err != nil {
 		return server.Routes{}, nil, err

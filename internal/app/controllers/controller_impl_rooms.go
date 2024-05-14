@@ -11,8 +11,8 @@ import (
 	"github.com/stdyum/api-types-registry/internal/app/entities"
 )
 
-func (c *controller) GetRoomsPaginated(ctx context.Context, enrollment models.Enrollment, paginationQuery pagination.Query) (dto.RoomsResponseDTO, error) {
-	rooms, amount, err := c.repository.GetRoomsPaginated(ctx, enrollment.StudyPlaceId, paginationQuery)
+func (c *controller) GetRoomsPaginated(ctx context.Context, studyPlaceId uuid.UUID, paginationQuery pagination.Query) (dto.RoomsResponseDTO, error) {
+	rooms, amount, err := c.repository.GetRoomsPaginated(ctx, studyPlaceId, paginationQuery)
 	if err != nil {
 		return dto.RoomsResponseDTO{}, err
 	}
@@ -86,13 +86,13 @@ func (c *controller) CreateRooms(ctx context.Context, enrollment models.Enrollme
 	}), nil
 }
 
-func (c *controller) UpdateRoom(ctx context.Context, enrollment models.Enrollment, request dto.UpdateRoomRequestDTO) error {
+func (c *controller) UpdateRoom(ctx context.Context, enrollment models.Enrollment, id uuid.UUID, request dto.UpdateRoomRequestDTO) error {
 	if err := enrollment.Permissions.Assert(models.PermissionRegistry); err != nil {
 		return err
 	}
 
 	room := entities.Room{
-		ID:           request.ID,
+		ID:           id,
 		StudyPlaceId: enrollment.StudyPlaceId,
 		Name:         request.Name,
 	}

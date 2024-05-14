@@ -8,10 +8,10 @@ import (
 )
 
 func (h *http) GetTeachersPaginated(ctx *hc.Context) {
-	enrollment := ctx.Enrollment()
+	studyPlaceId := ctx.StudyPlaceId()
 	query := ctx.PaginationQuery()
 
-	response, err := h.controller.GetTeachersPaginated(ctx, enrollment, &query)
+	response, err := h.controller.GetTeachersPaginated(ctx, studyPlaceId, &query)
 	if err != nil {
 		_ = ctx.Error(err)
 		return
@@ -56,14 +56,19 @@ func (h *http) CreateTeachers(ctx *hc.Context) {
 
 func (h *http) UpdateTeacher(ctx *hc.Context) {
 	enrollment := ctx.Enrollment()
-
-	var request dto.UpdateTeacherRequestDTO
-	if err := ctx.BindJSON(&request); err != nil {
+	id, err := ctx.UUIDParam("id")
+	if err != nil {
 		_ = ctx.Error(err)
 		return
 	}
 
-	if err := h.controller.UpdateTeacher(ctx, enrollment, request); err != nil {
+	var request dto.UpdateTeacherRequestDTO
+	if err = ctx.BindJSON(&request); err != nil {
+		_ = ctx.Error(err)
+		return
+	}
+
+	if err = h.controller.UpdateTeacher(ctx, enrollment, id, request); err != nil {
 		_ = ctx.Error(err)
 		return
 	}

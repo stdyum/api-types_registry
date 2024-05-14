@@ -15,7 +15,7 @@ func (r *repository) GetTeachersPaginated(ctx context.Context, studyPlaceId uuid
 	result, total, err := pagination.QueryPaginationContext(
 		ctx, r.database,
 		"SELECT id, study_place_id, name, created_at, updated_at FROM teachers WHERE study_place_id = $1",
-		"SELECT count(*) FROM teachers",
+		"SELECT count(*) FROM teachers WHERE study_place_id = $1",
 		paginationQuery,
 		studyPlaceId,
 	)

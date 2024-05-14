@@ -39,6 +39,20 @@ func (c *controller) GetTypesById(ctx context.Context, enrollment models.Enrollm
 		})
 	}
 
+	if len(ids.StudentIds) != 0 {
+		subjects, err := c.repository.GetStudentsByIds(ctx, enrollment.StudyPlaceId, ids.SubjectsIds)
+		if err != nil {
+			return dto.TypesModelsResponseDTO{}, err
+		}
+
+		response.StudentsIds = uslices.ToMapFunc(subjects, func(item entities.Student) (string, dto.TypesModelsStudentResponseDTO) {
+			return item.ID.String(), dto.TypesModelsStudentResponseDTO{
+				ID:   item.ID.String(),
+				Name: item.Name,
+			}
+		})
+	}
+
 	if len(ids.SubjectsIds) != 0 {
 		subjects, err := c.repository.GetSubjectsByIds(ctx, enrollment.StudyPlaceId, ids.SubjectsIds)
 		if err != nil {

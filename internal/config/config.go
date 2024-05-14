@@ -10,6 +10,7 @@ var Config Model
 type Model struct {
 	Ports           server.PortConfig     `env:"PORT"`
 	Database        DatabaseConfig        `env:"DATABASE"`
+	AuthGRpc        AuthGRpcConfig        `env:"GRPC_AUTH"`
 	StudyPlacesGRpc StudyPlacesGRpcConfig `env:"GRPC_STUDY_PLACES"`
 }
 

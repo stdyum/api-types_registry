@@ -11,8 +11,8 @@ import (
 	"github.com/stdyum/api-types-registry/internal/app/entities"
 )
 
-func (c *controller) GetSubjectsPaginated(ctx context.Context, enrollment models.Enrollment, paginationQuery pagination.Query) (dto.SubjectsResponseDTO, error) {
-	groups, amount, err := c.repository.GetSubjectsPaginated(ctx, enrollment.StudyPlaceId, paginationQuery)
+func (c *controller) GetSubjectsPaginated(ctx context.Context, studyPlaceId uuid.UUID, paginationQuery pagination.Query) (dto.SubjectsResponseDTO, error) {
+	groups, amount, err := c.repository.GetSubjectsPaginated(ctx, studyPlaceId, paginationQuery)
 	if err != nil {
 		return dto.SubjectsResponseDTO{}, err
 	}
@@ -86,13 +86,13 @@ func (c *controller) CreateSubjects(ctx context.Context, enrollment models.Enrol
 	}), nil
 }
 
-func (c *controller) UpdateSubject(ctx context.Context, enrollment models.Enrollment, request dto.UpdateSubjectRequestDTO) error {
+func (c *controller) UpdateSubject(ctx context.Context, enrollment models.Enrollment, id uuid.UUID, request dto.UpdateSubjectRequestDTO) error {
 	if err := enrollment.Permissions.Assert(models.PermissionRegistry); err != nil {
 		return err
 	}
 
 	subject := entities.Subject{
-		ID:           request.ID,
+		ID:           id,
 		StudyPlaceId: enrollment.StudyPlaceId,
 		Name:         request.Name,
 	}
