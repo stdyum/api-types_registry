@@ -12,7 +12,7 @@ type GRPC interface {
 }
 
 type gRPC struct {
-	types_registry.UnsafeTypesRegistryServer
+	types_registry.UnimplementedTypesRegistryServer
 
 	controller controllers.Controller
 }

@@ -50,6 +50,7 @@ type Repository interface {
 	RemoveStudentFromGroup(ctx context.Context, studyPlaceId uuid.UUID, groupId uuid.UUID, studentId uuid.UUID) error
 
 	GetTeacherTuitionGroups(ctx context.Context, studyPlaceId uuid.UUID, groupId uuid.UUID) ([]entities.Group, error)
+	GetStudentGroups(ctx context.Context, studyPlaceId uuid.UUID, studentId uuid.UUID) ([]entities.Group, error)
 	AddTutorToGroups(ctx context.Context, studyPlaceId uuid.UUID, groupIds []uuid.UUID, teacherId uuid.UUID) error
 	RemoveGroupTutor(ctx context.Context, studyPlaceId uuid.UUID, groupId uuid.UUID, teacherId uuid.UUID) error
 }

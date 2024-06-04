@@ -50,6 +50,7 @@ type Controller interface {
 	DeleteStudentsByIds(ctx context.Context, enrollment models.Enrollment, request dto.DeleteStudentsByIdsRequestDTO) error
 
 	GetStudentsInGroup(ctx context.Context, enrollment models.Enrollment, groupId uuid.UUID) ([]dto.StudentItemResponseDTO, error)
+	GetStudentGroups(ctx context.Context, enrollment models.Enrollment, studentId uuid.UUID) ([]dto.GroupItemResponseDTO, error)
 	AddStudentsToGroup(ctx context.Context, enrollment models.Enrollment, request dto.AddStudentsToGroupRequestDTO) error
 	RemoveStudentFromGroup(ctx context.Context, enrollment models.Enrollment, request dto.RemoveStudentFromGroupDTO) error
 

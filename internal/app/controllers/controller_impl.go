@@ -100,6 +100,22 @@ func (c *controller) GetStudentsInGroup(ctx context.Context, enrollment models.E
 	return response, nil
 }
 
+func (c *controller) GetStudentGroups(ctx context.Context, enrollment models.Enrollment, studentId uuid.UUID) ([]dto.GroupItemResponseDTO, error) {
+	students, err := c.repository.GetStudentGroups(ctx, enrollment.StudyPlaceId, studentId)
+	if err != nil {
+		return nil, err
+	}
+
+	response := uslices.MapFunc(students, func(item entities.Group) dto.GroupItemResponseDTO {
+		return dto.GroupItemResponseDTO{
+			ID:           item.ID,
+			StudyPlaceId: item.StudyPlaceId,
+			Name:         item.Name,
+		}
+	})
+	return response, nil
+}
+
 func (c *controller) AddStudentsToGroup(ctx context.Context, enrollment models.Enrollment, request dto.AddStudentsToGroupRequestDTO) error {
 	if err := enrollment.Permissions.Assert(models.PermissionRegistry); err != nil {
 		return err

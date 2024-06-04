@@ -21,6 +21,18 @@ WHERE student_groups.study_place_id = $1
 	return databases.ScanArrayErr(scanner, r.scanStudent, err)
 }
 
+func (r *repository) GetStudentGroups(ctx context.Context, studyPlaceId uuid.UUID, studentId uuid.UUID) ([]entities.Group, error) {
+	scanner, err := r.database.QueryContext(ctx, `
+SELECT groups.id, groups.study_place_id, groups.name, groups.created_at, groups.updated_at
+FROM student_groups
+         INNER JOIN groups ON groups.id = student_groups.group_id
+WHERE student_groups.study_place_id = $1
+  AND student_groups.student_id = $2
+`, studyPlaceId, studentId,
+	)
+	return databases.ScanArrayErr(scanner, r.scanGroup, err)
+}
+
 func (r *repository) AddStudentsToGroup(ctx context.Context, studyPlaceId uuid.UUID, studentIds []uuid.UUID, groupId uuid.UUID) error {
 	builder := query_builder.NewQueryBuilder(`
 INSERT INTO student_groups (study_place_id, student_id, group_id) VALUES 

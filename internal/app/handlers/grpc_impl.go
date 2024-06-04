@@ -80,3 +80,59 @@ func (h *gRPC) GetTypesByIds(ctx context.Context, ids *types_registry.TypesIds) 
 		}),
 	}, nil
 }
+
+func (h *gRPC) GetStudentsInGroup(ctx context.Context, req *types_registry.GroupId) (*types_registry.Students, error) {
+	enrollmentUser, err := grpc.EnrollmentAuth(ctx, req.Token, req.StudyPlaceId)
+	if err != nil {
+		return nil, err
+	}
+
+	id, err := uuid.Parse(req.Uuid)
+	if err != nil {
+		return nil, err
+	}
+
+	students, err := h.controller.GetStudentsInGroup(ctx, enrollmentUser.Enrollment, id)
+	if err != nil {
+		return nil, err
+	}
+
+	out := types_registry.Students{
+		List: uslices.MapFunc(students, func(item dto.StudentItemResponseDTO) *types_registry.Student {
+			return &types_registry.Student{
+				Id:   item.ID.String(),
+				Name: item.Name,
+			}
+		}),
+	}
+
+	return &out, nil
+}
+
+func (h *gRPC) GetStudentGroups(ctx context.Context, req *types_registry.StudentId) (*types_registry.Groups, error) {
+	enrollmentUser, err := grpc.EnrollmentAuth(ctx, req.Token, req.StudyPlaceId)
+	if err != nil {
+		return nil, err
+	}
+
+	id, err := uuid.Parse(req.Uuid)
+	if err != nil {
+		return nil, err
+	}
+
+	groups, err := h.controller.GetStudentGroups(ctx, enrollmentUser.Enrollment, id)
+	if err != nil {
+		return nil, err
+	}
+
+	out := types_registry.Groups{
+		List: uslices.MapFunc(groups, func(item dto.GroupItemResponseDTO) *types_registry.Group {
+			return &types_registry.Group{
+				Id:   item.ID.String(),
+				Name: item.Name,
+			}
+		}),
+	}
+
+	return &out, nil
+}
