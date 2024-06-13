@@ -6,7 +6,7 @@ require (
 	github.com/google/uuid v1.6.0
 	github.com/lib/pq v1.10.9
 	github.com/pressly/goose/v3 v3.17.0
-	github.com/stdyum/api-common v0.0.0-20240604220634-b78ac25eea03
+	github.com/stdyum/api-common v0.0.0-20240613224650-514f5d77ef03
 	google.golang.org/grpc v1.61.0
 )
 
