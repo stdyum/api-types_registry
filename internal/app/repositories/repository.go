@@ -46,6 +46,7 @@ type Repository interface {
 	DeleteStudentsByIds(ctx context.Context, studyPlaceId uuid.UUID, ids []uuid.UUID) error
 
 	GetStudentsInGroup(ctx context.Context, studyPlaceId uuid.UUID, groupId uuid.UUID) ([]entities.Student, error)
+	GetStudentsInGroupsPaginated(ctx context.Context, studyPlaceId uuid.UUID, paginationQuery pagination.Query) ([]entities.AggregatedStudentGroup, int, error)
 	AddStudentsToGroup(ctx context.Context, studyPlaceId uuid.UUID, studentIds []uuid.UUID, groupId uuid.UUID) error
 	RemoveStudentFromGroup(ctx context.Context, studyPlaceId uuid.UUID, groupId uuid.UUID, studentId uuid.UUID) error
 
@@ -53,6 +54,8 @@ type Repository interface {
 	GetStudentGroups(ctx context.Context, studyPlaceId uuid.UUID, studentId uuid.UUID) ([]entities.Group, error)
 	AddTutorToGroups(ctx context.Context, studyPlaceId uuid.UUID, groupIds []uuid.UUID, teacherId uuid.UUID) error
 	RemoveGroupTutor(ctx context.Context, studyPlaceId uuid.UUID, groupId uuid.UUID, teacherId uuid.UUID) error
+
+	GetGroupIdsWithStudents(ctx context.Context, studyPlaceId uuid.UUID) ([]uuid.UUID, error)
 }
 
 type repository struct {

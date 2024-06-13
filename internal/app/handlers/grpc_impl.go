@@ -136,3 +136,21 @@ func (h *gRPC) GetStudentGroups(ctx context.Context, req *types_registry.Student
 
 	return &out, nil
 }
+
+func (h *gRPC) GetGroupIdsWithStudents(ctx context.Context, req *types_registry.Auth) (*types_registry.GroupIds, error) {
+	enrollmentUser, err := grpc.EnrollmentAuth(ctx, req.Token, req.StudyPlaceId)
+	if err != nil {
+		return nil, err
+	}
+
+	groups, err := h.controller.GetGroupIdsWithStudents(ctx, enrollmentUser.Enrollment)
+	if err != nil {
+		return nil, err
+	}
+
+	return &types_registry.GroupIds{
+		List: uslices.MapFunc(groups, func(item uuid.UUID) string {
+			return item.String()
+		}),
+	}, nil
+}

@@ -65,6 +65,14 @@ func (h *http) ConfigureRoutes() *hc.Engine {
 		teachersGroup.Use(middlewares.EnrollmentAuthMiddleware()).DELETE("", h.DeleteTeachersByIds)
 	}
 
+	{
+		studentsGroupsGroup := withStudyPlaceId.Group("students_groups")
+
+		studentsGroupsGroup.Use(middlewares.EnrollmentAuthMiddleware(), middlewares.PaginationMiddleware(10)).GET("", h.GetStudentsInGroups)
+		studentsGroupsGroup.Use(middlewares.EnrollmentAuthMiddleware()).POST("", h.AddStudentsToGroup)
+		studentsGroupsGroup.Use(middlewares.EnrollmentAuthMiddleware()).DELETE("", h.RemoveStudentFromGroup)
+	}
+
 	return engine
 }
 

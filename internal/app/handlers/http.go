@@ -39,7 +39,7 @@ type HTTP interface {
 	UpdateStudent(ctx *hc.Context)
 	DeleteStudentsByIds(ctx *hc.Context)
 
-	GetStudentsInGroup(ctx *hc.Context)
+	GetStudentsInGroups(ctx *hc.Context)
 	AddStudentsToGroup(ctx *hc.Context)
 	RemoveStudentFromGroup(ctx *hc.Context)
 

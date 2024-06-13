@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/google/uuid"
+	"github.com/stdyum/api-common/databases/pagination"
 	"github.com/stdyum/api-common/models"
 	"github.com/stdyum/api-common/uslices"
 	"github.com/stdyum/api-types-registry/internal/app/dto"
@@ -100,6 +101,27 @@ func (c *controller) GetStudentsInGroup(ctx context.Context, enrollment models.E
 	return response, nil
 }
 
+func (c *controller) GetStudentsInGroupsPaginated(ctx context.Context, enrollment models.Enrollment, paginationQuery *pagination.CreatedAtPageQuery) (dto.StudentsInGroupsResponseDTO, error) {
+	studentsInGroups, amount, err := c.repository.GetStudentsInGroupsPaginated(ctx, enrollment.StudyPlaceId, paginationQuery)
+	if err != nil {
+		return dto.StudentsInGroupsResponseDTO{}, err
+	}
+
+	paginationResult := pagination.FromArrayAndAmount(studentsInGroups, amount, paginationQuery,
+		func(el entities.AggregatedStudentGroup) dto.StudentInGroupResponseDTO {
+			return dto.StudentInGroupResponseDTO{
+				StudyPlaceId: el.StudyPlaceId,
+				StudentId:    el.StudentId,
+				StudentName:  el.Student,
+				GroupId:      el.GroupId,
+				GroupName:    el.Group,
+			}
+		},
+	)
+
+	return dto.StudentsInGroupsResponseDTO(paginationResult), nil
+}
+
 func (c *controller) GetStudentGroups(ctx context.Context, enrollment models.Enrollment, studentId uuid.UUID) ([]dto.GroupItemResponseDTO, error) {
 	students, err := c.repository.GetStudentGroups(ctx, enrollment.StudyPlaceId, studentId)
 	if err != nil {
@@ -162,4 +184,8 @@ func (c *controller) RemoveGroupTutor(ctx context.Context, enrollment models.Enr
 	}
 
 	return c.repository.RemoveGroupTutor(ctx, enrollment.StudyPlaceId, request.GroupId, request.TeacherId)
+}
+
+func (c *controller) GetGroupIdsWithStudents(ctx context.Context, enrollment models.Enrollment) ([]uuid.UUID, error) {
+	return c.repository.GetGroupIdsWithStudents(ctx, enrollment.StudyPlaceId)
 }

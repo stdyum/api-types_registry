@@ -1,6 +1,7 @@
 package repositories
 
 import (
+	"github.com/google/uuid"
 	"github.com/stdyum/api-common/databases"
 	"github.com/stdyum/api-types-registry/internal/app/entities"
 )
@@ -57,5 +58,23 @@ func (r *repository) scanTeacher(row databases.Scan) (teacher entities.Teacher, 
 		&teacher.CreatedAt,
 		&teacher.UpdatedAt,
 	)
+	return
+}
+
+func (r *repository) scanAggregatedStudentGroup(row databases.Scan) (studentGroup entities.AggregatedStudentGroup, err error) {
+	err = row.Scan(
+		&studentGroup.StudyPlaceId,
+		&studentGroup.StudentId,
+		&studentGroup.Student,
+		&studentGroup.GroupId,
+		&studentGroup.Group,
+		&studentGroup.CreatedAt,
+		&studentGroup.UpdatedAt,
+	)
+	return
+}
+
+func (r *repository) scanUUID(row databases.Scan) (id uuid.UUID, err error) {
+	err = row.Scan(&id)
 	return
 }

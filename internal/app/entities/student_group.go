@@ -12,3 +12,13 @@ type StudentGroup struct {
 	StudentId    uuid.UUID
 	GroupId      uuid.UUID
 }
+
+type AggregatedStudentGroup struct {
+	entities.Timed
+
+	StudyPlaceId uuid.UUID
+	StudentId    uuid.UUID
+	Student      string
+	GroupId      uuid.UUID
+	Group        string
+}

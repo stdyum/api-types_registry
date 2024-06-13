@@ -27,7 +27,7 @@ func main() {
 			GenerateItems: func(ctx context.Context, data *any) ([]models.Enrollment, error) {
 				return []models.Enrollment{
 					{
-						StudyPlaceId: uuid.MustParse("7115bc03-143f-4acd-912d-02ffa9f14462"),
+						StudyPlaceId: uuid.MustParse("ae2bdeb1-a820-49c1-adca-4405be0034ee"),
 						Permissions:  []models.Permission{models.PermissionAdmin},
 					},
 				}, nil
@@ -62,7 +62,7 @@ func main() {
 						Amount: 50,
 					},
 					Generate: func(ctx context.Context, i int, data *any, previous models.Enrollment) (dto.CreateSubjectEntryRequestDTO, error) {
-						return dto.CreateSubjectEntryRequestDTO{Name: "Room" + strconv.Itoa(i)}, nil
+						return dto.CreateSubjectEntryRequestDTO{Name: "Subject" + strconv.Itoa(i)}, nil
 					},
 					Insert: func(ctx context.Context, i int, items []dto.CreateSubjectEntryRequestDTO, previous models.Enrollment) error {
 						_, err = ctrl.CreateSubjects(ctx, previous, dto.CreateSubjectsRequestDTO{List: items})
@@ -74,10 +74,22 @@ func main() {
 						Amount: 50,
 					},
 					Generate: func(ctx context.Context, i int, data *any, previous models.Enrollment) (dto.CreateTeacherEntryRequestDTO, error) {
-						return dto.CreateTeacherEntryRequestDTO{Name: "Room" + strconv.Itoa(i)}, nil
+						return dto.CreateTeacherEntryRequestDTO{Name: "Teacher" + strconv.Itoa(i)}, nil
 					},
 					Insert: func(ctx context.Context, i int, items []dto.CreateTeacherEntryRequestDTO, previous models.Enrollment) error {
 						_, err = ctrl.CreateTeachers(ctx, previous, dto.CreateTeachersRequestDTO{List: items})
+						return err
+					},
+				}.Build(),
+				mock.DataItemNested[any, dto.CreateStudentEntryRequestDTO, models.Enrollment]{
+					Config: mock.ConfigItem{
+						Amount: 50,
+					},
+					Generate: func(ctx context.Context, i int, data *any, previous models.Enrollment) (dto.CreateStudentEntryRequestDTO, error) {
+						return dto.CreateStudentEntryRequestDTO{Name: "Teacher" + strconv.Itoa(i)}, nil
+					},
+					Insert: func(ctx context.Context, i int, items []dto.CreateStudentEntryRequestDTO, previous models.Enrollment) error {
+						_, err = ctrl.CreateStudents(ctx, previous, dto.CreateStudentsRequestDTO{List: items})
 						return err
 					},
 				}.Build(),

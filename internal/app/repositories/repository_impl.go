@@ -5,6 +5,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/stdyum/api-common/databases"
+	"github.com/stdyum/api-common/databases/pagination"
 	"github.com/stdyum/api-common/databases/query_builder"
 	"github.com/stdyum/api-types-registry/internal/app/entities"
 )
@@ -19,6 +20,25 @@ WHERE student_groups.study_place_id = $1
 `, studyPlaceId, groupId,
 	)
 	return databases.ScanArrayErr(scanner, r.scanStudent, err)
+}
+
+func (r *repository) GetStudentsInGroupsPaginated(ctx context.Context, studyPlaceId uuid.UUID, paginationQuery pagination.Query) ([]entities.AggregatedStudentGroup, int, error) {
+	paginationQuery.SetField("student_groups.created_at")
+	result, total, err := pagination.QueryPaginationContext(
+		ctx, r.database,
+		`
+SELECT students.study_place_id, students.id, students.name, groups.id, groups.name, student_groups.created_at, student_groups.updated_at
+FROM student_groups
+         INNER JOIN students ON students.id = student_groups.student_id
+         INNER JOIN groups ON groups.id = student_groups.group_id
+WHERE student_groups.study_place_id = $1
+`,
+		"SELECT count(*) FROM student_groups WHERE study_place_id = $1",
+		paginationQuery,
+		studyPlaceId,
+	)
+
+	return databases.ScanPaginationErr(result, r.scanAggregatedStudentGroup, total, err)
 }
 
 func (r *repository) GetStudentGroups(ctx context.Context, studyPlaceId uuid.UUID, studentId uuid.UUID) ([]entities.Group, error) {
@@ -87,4 +107,13 @@ func (r *repository) RemoveGroupTutor(ctx context.Context, studyPlaceId uuid.UUI
 DELETE FROM tutor_groups WHERE study_place_id = $1 AND teacher_id = $2 AND group_id = $3
 	`, studyPlaceId, teacherId, groupId)
 	return databases.AssertRowAffectedErr(result, err)
+}
+
+func (r *repository) GetGroupIdsWithStudents(ctx context.Context, studyPlaceId uuid.UUID) ([]uuid.UUID, error) {
+	scanner, err := r.database.QueryContext(ctx, `
+SELECT DISTINCT group_id FROM student_groups WHERE study_place_id = $1
+`, studyPlaceId,
+	)
+
+	return databases.ScanArrayErr(scanner, r.scanUUID, err)
 }

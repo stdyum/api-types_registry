@@ -77,3 +77,13 @@ type TeacherItemResponseDTO struct {
 }
 
 type TeachersResponseDTO pagination.Result[TeacherItemResponseDTO]
+
+type StudentInGroupResponseDTO struct {
+	StudyPlaceId uuid.UUID `json:"studyPlaceId"`
+	StudentId    uuid.UUID `json:"studentId"`
+	StudentName  string    `json:"studentName"`
+	GroupId      uuid.UUID `json:"groupId"`
+	GroupName    string    `json:"groupName"`
+}
+
+type StudentsInGroupsResponseDTO pagination.Result[StudentInGroupResponseDTO]
