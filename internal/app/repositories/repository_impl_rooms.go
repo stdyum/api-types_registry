@@ -17,6 +17,7 @@ func (r *repository) GetRoomsPaginated(ctx context.Context, studyPlaceId uuid.UU
 		"SELECT id, study_place_id, name, created_at, updated_at FROM rooms WHERE study_place_id = $1",
 		"SELECT count(*) FROM rooms WHERE study_place_id = $1",
 		paginationQuery,
+		[]string{"name"},
 		studyPlaceId,
 	)
 	return databases.ScanPaginationErr(result, r.scanRoom, total, err)

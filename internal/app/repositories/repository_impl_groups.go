@@ -17,6 +17,7 @@ func (r *repository) GetGroupsPaginated(ctx context.Context, studyPlaceId uuid.U
 		"SELECT id, study_place_id, name, created_at, updated_at FROM groups WHERE study_place_id = $1",
 		"SELECT count(*) FROM groups WHERE study_place_id = $1",
 		paginationQuery,
+		[]string{"name"},
 		studyPlaceId,
 	)
 	return databases.ScanPaginationErr(result, r.scanGroup, total, err)

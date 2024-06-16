@@ -33,8 +33,14 @@ FROM student_groups
          INNER JOIN groups ON groups.id = student_groups.group_id
 WHERE student_groups.study_place_id = $1
 `,
-		"SELECT count(*) FROM student_groups WHERE study_place_id = $1",
+		`
+SELECT count(*)
+FROM student_groups
+         INNER JOIN students ON students.id = student_groups.student_id
+         INNER JOIN groups ON groups.id = student_groups.group_id
+WHERE student_groups.study_place_id = $1`,
 		paginationQuery,
+		[]string{"students.name", "groups.name"},
 		studyPlaceId,
 	)
 
